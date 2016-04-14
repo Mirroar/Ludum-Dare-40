@@ -11,9 +11,21 @@ require('classes/entitymanager')
 require('classes/menu')
 require('classes/log')
 
-require('modules/isometric')
-require('modules/linear')
-require('modules/topdown')
+local modules = {
+    isometric = {
+        name = 'Isometric Map',
+        className = 'IsometricSample',
+    },
+    linear = {
+        name = 'Linear Map',
+        className = 'LinearSample',
+    },
+    topdown = {
+        name = 'Top-Down Map',
+        className = 'TopDownSample',
+    },
+}
+local currentModule = null
 
 function angle(x)
     -- helper function that makes sure angles are always between 0 and 360
@@ -81,26 +93,33 @@ function love.load()
     LoadSounds()
 
     menu = Menu()
-    menu:AddItem("Foo", function()
-    end)
-    menu:AddItem("Bar", function()
-    end)
+
+    for moduleName, moduleInfo in pairs(modules) do
+        menu:AddItem(moduleInfo.name, function()
+            if not moduleInfo.initialized then
+                moduleInfo.initialized = true
+                require('modules/' .. moduleName)
+                moduleInfo.object = _G[moduleInfo.className]()
+            end
+
+            currentModule = moduleInfo
+        end)
+    end
+
     menu:AddItem("Exit", function()
         love.event.quit()
     end)
 
     log = Log()
     log:insert('initialized...')
-
-    topDown = TopDownSample()
-    iso = IsometricSample()
-    linear = LinearSample()
 end
 
 function love.update(delta)
     menu:update(delta)
 
-    linear:update(delta)
+    if currentModule and currentModule.object.update then
+        currentModule.object:update(delta)
+    end
 end
 
 function love.draw()
@@ -109,18 +128,13 @@ function love.draw()
     love.graphics.clear()
 
     -- Draw active modules.
-    love.graphics.push()
-    topDown:draw()
+    if currentModule and currentModule.object.draw then
+        love.graphics.push()
+        love.graphics.translate(0, 200)
+        currentModule.object:draw()
+        love.graphics.pop()
+    end
 
-    love.graphics.translate(500, 100)
-    iso:draw()
-
-    love.graphics.translate(-500, 200)
-    linear:draw()
-
-    love.graphics.pop()
-
-    love.graphics.translate(0, 100)
     menu:draw()
     log:draw()
 end
