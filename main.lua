@@ -8,10 +8,8 @@ require('classes/bullet')
 require('classes/actor')
 require('classes/player')
 require('classes/entitymanager')
-
-require('modules/topdown')
-require('modules/isometric')
-require('modules/linear')
+require('classes/menu')
+require('classes/log')
 
 function angle(x)
     -- helper function that makes sure angles are always between 0 and 360
@@ -45,29 +43,65 @@ function lerpAngle(min, max, percentile)
 end
 
 local function LoadTextures()
+    textures = TiledTextureAtlas("images/Textures.png")
+    --textures:SetTileSize(32, 32)
+    --textures:SetTilePadding(2, 2)
+    --textures:SetTileOffset(2, 2)
+    textures:DefineTile("Spinner1", 1, 1)
+    textures:DefineTile("Spinner2", 2, 1)
+    textures:DefineTile("Spinner3", 3, 1)
+    textures:DefineTile("Spinner4", 4, 1)
+end
+
+local function LoadSounds()
+    sounds = {
+        --[[menu = {
+            love.audio.newSource("sounds/Menu.wav", "static"),
+        },--]]
+    }
+end
+
+function PlaySound(id)
+    if sounds[id] then
+        local sound = sounds[id][math.random(1, #sounds[id])]
+        love.audio.rewind(sound)
+        love.audio.play(sound)
+    end
 end
 
 function love.load()
-    LoadTextures()
+    love.window.setTitle("Ludum Dare")
+    love.window.setMode(1280, 720)
 
-    topDown = TopDownSample()
-    iso = IsometricSample()
-    linear = LinearSample()
+    LoadTextures()
+    LoadSounds()
+
+    menu = Menu()
+    menu:AddItem("Foo", function()
+    end)
+    menu:AddItem("Bar", function()
+    end)
+    menu:AddItem("Exit", function()
+        love.event.quit()
+    end)
+
+    log = Log()
+    log:insert('initialized...')
 end
 
 function love.update(delta)
-    linear:update(delta)
+    menu:update(delta)
 end
 
 function love.draw()
     love.graphics.setBackgroundColor(32, 32, 32)
     love.graphics.clear()
 
-    topDown:draw()
+    love.graphics.translate(0, 100)
+    menu:draw()
+    log:draw()
+end
 
-    love.graphics.translate(500, 100)
-    iso:draw()
-
-    love.graphics.translate(-500, 200)
-    linear:draw()
+function love.keypressed(key, isRepeat)
+    menu:keypressed(key)
 end
