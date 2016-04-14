@@ -11,6 +11,10 @@ require('classes/entitymanager')
 require('classes/menu')
 require('classes/log')
 
+require('modules/isometric')
+require('modules/linear')
+require('modules/topdown')
+
 function angle(x)
     -- helper function that makes sure angles are always between 0 and 360
     return x % 360
@@ -87,15 +91,34 @@ function love.load()
 
     log = Log()
     log:insert('initialized...')
+
+    topDown = TopDownSample()
+    iso = IsometricSample()
+    linear = LinearSample()
 end
 
 function love.update(delta)
     menu:update(delta)
+
+    linear:update(delta)
 end
 
 function love.draw()
+    -- Clear screen.
     love.graphics.setBackgroundColor(32, 32, 32)
     love.graphics.clear()
+
+    -- Draw active modules.
+    love.graphics.push()
+    topDown:draw()
+
+    love.graphics.translate(500, 100)
+    iso:draw()
+
+    love.graphics.translate(-500, 200)
+    linear:draw()
+
+    love.graphics.pop()
 
     love.graphics.translate(0, 100)
     menu:draw()
