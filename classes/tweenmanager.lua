@@ -3,6 +3,7 @@ TweenManager = class()
 function TweenManager:construct()
     self.tweens = {}
 
+    -- Tween functions take values from 0 to 1.
     self.tweenFunctions = {
         linear = function (x)
             return x
@@ -15,6 +16,7 @@ function TweenManager:construct()
     self.defaultSettings = {
         duration = 1,
         type = 'linear',
+        direction = 'in',
     }
 end
 
@@ -29,7 +31,38 @@ function TweenManager:update(delta)
             end
 
             local percentage = tween.currentTime / tween.duration
-            percentage = self.tweenFunctions[tween.type](percentage)
+            if tween.direction == 'in' then
+                -- Use tween function directly.
+                percentage = self.tweenFunctions[tween.type](percentage)
+            elseif tween.direction == 'out' then
+                -- Mirror tween function at the center.
+                percentage = 1 - percentage
+                percentage = self.tweenFunctions[tween.type](percentage)
+                percentage = 1 - percentage
+            elseif tween.direction == 'inout' then
+                -- First ease in and then ease out.
+                percentage = percentage * 2
+                if percentage < 1 then
+                    percentage = self.tweenFunctions[tween.type](percentage)
+                    percentage = percentage / 2
+                else
+                    percentage = 2 - percentage
+                    percentage = self.tweenFunctions[tween.type](percentage)
+                    percentage = 1 - percentage / 2
+                end
+            elseif tween.direction == 'outin' then
+                -- First ease out and then ease in.
+                percentage = percentage * 2
+                if percentage < 1 then
+                    percentage = 1 - percentage
+                    percentage = self.tweenFunctions[tween.type](percentage)
+                    percentage = (1 - percentage) / 2
+                else
+                    percentage = percentage - 1
+                    percentage = self.tweenFunctions[tween.type](percentage)
+                    percentage = (1 + percentage) / 2
+                end
+            end
             local newValue = lerp(tween.low, tween.high, percentage)
             object[key] = newValue
         end

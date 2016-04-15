@@ -5,21 +5,60 @@ function TweenSample:construct()
 
     self.objects = {
         {
-            name = 'Linear',
+            name = 'Ease In',
             y = 100,
             init = function (object)
-                object.x = 100
-                self.tweens:Tween(object, {x = 300}, nil, object.init)
+                self.tweens:Tween(object, {x = 300}, {type = 'square'}, function()
+                    self.tweens:Tween(object, {x = 100}, {type = 'square'}, object.init)
+                end)
             end,
         },
         {
-            name = 'Slow Bounce',
+            name = 'Linear',
             y = 150,
+            init = function (object)
+                self.tweens:Tween(object, {x = 300}, nil, function()
+                    self.tweens:Tween(object, {x = 100}, nil, object.init)
+                end)
+            end,
+        },
+        {
+            name = 'Ease Out',
+            y = 200,
+            init = function (object)
+                self.tweens:Tween(object, {x = 300}, {type = 'square', direction = 'out'}, function()
+                    self.tweens:Tween(object, {x = 100}, {type = 'square', direction = 'out'}, object.init)
+                end)
+            end,
+        },
+        {
+            name = 'Ease In and Out',
+            y = 250,
+            init = function (object)
+                self.tweens:Tween(object, {x = 300}, {type = 'square', direction = 'inout'}, function()
+                    self.tweens:Tween(object, {x = 100}, {type = 'square', direction = 'inout'}, object.init)
+                end)
+            end,
+        },
+        {
+            name = 'Ease Out and In',
+            y = 300,
+            init = function (object)
+                self.tweens:Tween(object, {x = 300}, {type = 'square', direction = 'outin'}, function()
+                    self.tweens:Tween(object, {x = 100}, {type = 'square', direction = 'outin'}, object.init)
+                end)
+            end,
+        },
+
+        {
+            name = 'Slow Bounce',
+            x = 500,
+            y = 100,
             forward = true,
             init = function (object)
-                local newX = 300
+                local newX = 700
                 if not object.forward then
-                    newX = 100
+                    newX = 500
                 end
                 object.forward = not object.forward
 
@@ -30,7 +69,7 @@ function TweenSample:construct()
         {
             name = 'Sizes',
             x = 500,
-            y = 100,
+            y = 150,
             forward = true,
             init = function (object)
                 local newSize = 5
@@ -39,7 +78,7 @@ function TweenSample:construct()
                 end
                 object.forward = not object.forward
 
-                self.tweens:Tween(object, {size = newSize}, {type = 'square'}, function (object)
+                self.tweens:Tween(object, {size = newSize}, {type = 'square', direction = 'inout'}, function (object)
                     -- Wait a second before tweening again.
                     self.tweens:Tween(object, {size = object.size}, nil, object.init)
                 end)
