@@ -49,6 +49,24 @@ function TweenSample:construct()
                 end)
             end,
         },
+        {
+            name = 'Ease In and Out using math.sin',
+            y = 350,
+            init = function (object)
+                self.tweens:Tween(object, {x = 300}, {type = 'sin', direction = 'inout'}, function()
+                    self.tweens:Tween(object, {x = 100}, {type = 'sin', direction = 'inout'}, object.init)
+                end)
+            end,
+        },
+        {
+            name = 'Ease Out and In using math.sin',
+            y = 400,
+            init = function (object)
+                self.tweens:Tween(object, {x = 300}, {type = 'sin', direction = 'outin'}, function()
+                    self.tweens:Tween(object, {x = 100}, {type = 'sin', direction = 'outin'}, object.init)
+                end)
+            end,
+        },
 
         {
             name = 'Slow Bounce',
@@ -84,6 +102,53 @@ function TweenSample:construct()
                 end)
             end,
         },
+
+        {
+            name = 'Circle',
+            x = 500,
+            y = 300,
+            size = 5,
+            color = {0, 255, 0},
+            init = function (object)
+                self.tweens:Tween(object, {x = 600}, {type = 'sin', direction = 'in'}, function (object)
+                    self.tweens:Tween(object, {x = 700}, {type = 'sin', direction = 'out'}, function (object)
+                        self.tweens:Tween(object, {x = 600}, {type = 'sin', direction = 'in'}, function (object)
+                            self.tweens:Tween(object, {x = 500}, {type = 'sin', direction = 'out'}, object.init)
+                        end)
+                    end)
+                end)
+                self.tweens:Tween(object, {y = 200}, {type = 'sin', direction = 'out'}, function (object)
+                    self.tweens:Tween(object, {y = 300}, {type = 'sin', direction = 'in'}, function (object)
+                        self.tweens:Tween(object, {y = 400}, {type = 'sin', direction = 'out'}, function (object)
+                            self.tweens:Tween(object, {y = 300}, {type = 'sin', direction = 'in'}, nil)
+                        end)
+                    end)
+                end)
+            end,
+        },
+        {
+            name = 'Not a Circle',
+            x = 700,
+            y = 300,
+            size = 5,
+            color = {255, 0, 0},
+            init = function (object)
+                self.tweens:Tween(object, {x = 600}, {type = 'square', direction = 'in'}, function (object)
+                    self.tweens:Tween(object, {x = 500}, {type = 'square', direction = 'out'}, function (object)
+                        self.tweens:Tween(object, {x = 600}, {type = 'square', direction = 'in'}, function (object)
+                            self.tweens:Tween(object, {x = 700}, {type = 'square', direction = 'out'}, object.init)
+                        end)
+                    end)
+                end)
+                self.tweens:Tween(object, {y = 400}, {type = 'square', direction = 'out'}, function (object)
+                    self.tweens:Tween(object, {y = 300}, {type = 'square', direction = 'in'}, function (object)
+                        self.tweens:Tween(object, {y = 200}, {type = 'square', direction = 'out'}, function (object)
+                            self.tweens:Tween(object, {y = 300}, {type = 'square', direction = 'in'}, nil)
+                        end)
+                    end)
+                end)
+            end,
+        },
     }
 
     -- Add some standard properties
@@ -108,6 +173,9 @@ function TweenSample:construct()
 end
 
 function TweenSample:draw()
+    love.graphics.setColor(128, 128, 128)
+    love.graphics.circle("line", 600, 300, 100)
+
     for _, object in pairs(self.objects) do
         love.graphics.setColor(unpack(object.color))
         love.graphics.circle("fill", object.x, object.y, object.size)

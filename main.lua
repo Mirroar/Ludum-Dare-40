@@ -145,10 +145,12 @@ function love.draw()
     if currentModule and currentModule.object.draw then
         love.graphics.push()
         love.graphics.translate(0, 200)
+        love.graphics.setColor(255, 255, 255)
         currentModule.object:draw()
         love.graphics.pop()
     end
 
+    love.graphics.setColor(255, 255, 255)
     menu:draw()
     log:draw()
 end

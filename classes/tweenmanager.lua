@@ -11,6 +11,9 @@ function TweenManager:construct()
         square = function (x)
             return x * x
         end,
+        sin = function (x)
+            return 1 - math.sin(math.pi * (1 - x) / 2)
+        end,
     }
 
     self.defaultSettings = {
