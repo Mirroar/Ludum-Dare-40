@@ -88,17 +88,13 @@ function TweenSample:construct()
 
         {
             name = 'Slow Bounce',
-            x = 500,
+            x = 800,
             y = 100,
-            forward = true,
             init = function (object)
-                local newX = 700
-                if not object.forward then
-                    newX = 500
-                end
-                object.forward = not object.forward
-
-                self.tweens:Tween(object, {x = newX}, {duration = 5}, object.init)
+                object.x = 800
+                object.y = 100
+                self.tweens:Tween(object, {y = 300}, {type = 'bounce', duration = 3, direction = 'out'})
+                self.tweens:Tween(object, {x = 1000}, {duration = 4}, object.init)
             end,
         },
 

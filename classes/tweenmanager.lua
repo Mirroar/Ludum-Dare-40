@@ -18,7 +18,19 @@ function TweenManager:construct()
             return 2 * x * x * x * x * x - x * x
         end,
         bounce = function(x)
-            return x
+            if x < 2 / 15 then
+                x = x * 15 / 2 * 2 - 1
+                return (1 - x * x) / 8
+            elseif x < 5 / 15 then
+                x = (x - 2 / 15) * 15 / 3 * 2 - 1
+                return (1 - x * x) / 4
+            elseif x < 10 / 15 then
+                x = (x - 5 / 15) * 15 / 5 * 2 - 1
+                return (1 - x * x) / 2
+            else
+                x = 1 - (x - 10 / 15) * 15 / 5
+                return 1 - x * x
+            end
         end,
         elastic = function(x)
             return x * x * (x * x * x + math.sin(math.pi * 4 * x))
