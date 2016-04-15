@@ -67,6 +67,15 @@ function TweenSample:construct()
                 end)
             end,
         },
+        {
+            name = 'Ease In and Out using backswing',
+            y = 450,
+            init = function (object)
+                self.tweens:Tween(object, {x = 300}, {type = 'back', direction = 'inout'}, function()
+                    self.tweens:Tween(object, {x = 100}, {type = 'back', direction = 'inout'}, object.init)
+                end)
+            end,
+        },
 
         {
             name = 'Slow Bounce',

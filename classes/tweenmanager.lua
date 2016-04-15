@@ -14,6 +14,15 @@ function TweenManager:construct()
         sin = function (x)
             return 1 - math.sin(math.pi * (1 - x) / 2)
         end,
+        back = function(x)
+            return 2 * x * x * x * x * x - x * x
+        end,
+        bounce = function(x)
+            return x
+        end,
+        elastic = function(x)
+            return x
+        end,
     }
 
     self.defaultSettings = {
@@ -66,7 +75,7 @@ function TweenManager:update(delta)
                     percentage = (1 + percentage) / 2
                 end
             end
-            local newValue = lerp(tween.low, tween.high, percentage)
+            local newValue = lerp(tween.low, tween.high, percentage, true)
             object[key] = newValue
         end
 
