@@ -10,6 +10,7 @@ require('classes/player')
 require('classes/entitymanager')
 require('classes/menu')
 require('classes/log')
+require('classes/tweenmanager')
 
 -- List of example modules for showing off functionality.
 local modules = {
@@ -24,6 +25,10 @@ local modules = {
     topdown = {
         name = 'Top-Down Map',
         className = 'TopDownSample',
+    },
+    tweens = {
+        name = 'Tweens',
+        className = 'TweenSample',
     },
 }
 local currentModule = null
