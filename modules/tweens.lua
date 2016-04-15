@@ -21,8 +21,28 @@ function TweenSample:construct()
                 if not object.forward then
                     newX = 100
                 end
-                self.tweens:Tween(object, {x = newX}, {duration = 5}, object.init)
                 object.forward = not object.forward
+
+                self.tweens:Tween(object, {x = newX}, {duration = 5}, object.init)
+            end,
+        },
+
+        {
+            name = 'Sizes',
+            x = 500,
+            y = 100,
+            forward = true,
+            init = function (object)
+                local newSize = 5
+                if not object.forward then
+                    newSize = 20
+                end
+                object.forward = not object.forward
+
+                self.tweens:Tween(object, {size = newSize}, {type = 'square'}, function (object)
+                    -- Wait a second before tweening again.
+                    self.tweens:Tween(object, {size = object.size}, nil, object.init)
+                end)
             end,
         },
     }
