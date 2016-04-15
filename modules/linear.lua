@@ -96,7 +96,7 @@ end
 function LinearSample:draw()
     self.map:draw()
     love.graphics.translate(-100, 0)
-    love.graphics.setScissor(0, 300, 32 * self.sizeX, 64)
+    love.graphics.setScissor(0, 200, 32 * self.sizeX, 64)
     self.cloudMap:draw()
     love.graphics.setScissor()
     love.graphics.translate(100, 0)
