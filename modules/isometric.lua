@@ -36,5 +36,6 @@ function IsometricSample:construct()
 end
 
 function IsometricSample:draw()
+    love.graphics.translate(100, 0)
     self.map:draw()
 end
