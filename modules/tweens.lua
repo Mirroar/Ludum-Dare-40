@@ -76,6 +76,15 @@ function TweenSample:construct()
                 end)
             end,
         },
+        {
+            name = 'Ease In and Out using elastic',
+            y = 500,
+            init = function (object)
+                self.tweens:Tween(object, {x = 300}, {type = 'elastic', direction = 'inout', duration = 4}, function()
+                    self.tweens:Tween(object, {x = 100}, {type = 'elastic', direction = 'inout', duration = 4}, object.init)
+                end)
+            end,
+        },
 
         {
             name = 'Slow Bounce',

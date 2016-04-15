@@ -21,7 +21,7 @@ function TweenManager:construct()
             return x
         end,
         elastic = function(x)
-            return x
+            return x * x * (x * x * x + math.sin(math.pi * 4 * x))
         end,
     }
 
