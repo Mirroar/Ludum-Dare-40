@@ -39,8 +39,11 @@ function angle(x)
 end
 
 -- Interpolates linearly between min and max.
-function lerp(min, max, percentile)
-    return min + (max - min) * math.max(0, math.min(1, percentile))
+function lerp(min, max, percentile, unbound)
+    if not unbound then
+        percentile = math.max(0, math.min(1, percentile))
+    end
+    return min + (max - min) * percentile
 end
 
 -- Interpolation linearly for angles.
