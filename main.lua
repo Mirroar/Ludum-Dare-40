@@ -31,7 +31,7 @@ local modules = {
         className = 'TweenSample',
     },
 }
-local currentModule = null
+local currentModule = nil
 
 -- Makes sure angles are always between 0 and 360.
 function angle(x)
