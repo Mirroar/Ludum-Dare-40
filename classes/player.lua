@@ -7,6 +7,9 @@ function Player:construct(...)
 
     self.cooldown = 0.3
 
+    self.maxHP = 10
+    self.hp = self.maxHP
+
     self.attachments = {}
 end
 
@@ -67,7 +70,7 @@ function Player:update(delta)
         self.y = self.y + self.speed * speedFactor * delta * math.cos(mAngle)
     end
 
-    -- Let the player fire
+    -- Let the player fire.
     if love.mouse.isDown(1) or love.keyboard.isDown('space') then
         if self:TryFire() then
             local bullet = Bullet(self.x, self.y, Bullet.PLAYER_SHOT, self.rotation)
@@ -82,4 +85,14 @@ function Player:update(delta)
             end
         end
     end
+
+    -- Slowly recover hp if core is damaged.
+    if self.hp < self.maxHP then
+        self.hp = self.hp + delta * 0.1
+
+        if self.hp > self.maxHP then
+            self.hp = self.maxHP
+        end
+    end
+
 end

@@ -19,24 +19,13 @@ function Game:initStage()
     self.isActive = true
     self.stageTimer = 0
     self.spawnTimer = 0
+    self.waves = {}
 
-    self:spawnEnemy()
-    self:spawnEnemy()
+    self:spawnWave()
 end
 
 function Game:endStage()
     self.isActive = false
-end
-
-function Game:spawnEnemy()
-    local x = math.random(self.width)
-    local y = math.random(self.height)
-
-    if game.player:GetDistanceTo(x, y) > 200 then
-        self.entities:AddEntity(Enemy(x, y))
-    else
-        self:spawnEnemy()
-    end
 end
 
 function Game:draw()
@@ -51,15 +40,25 @@ function Game:keypressed(key)
     end
 end
 
+function Game:spawnWave()
+    local waveType = 'sideways'
+
+    table.insert(self.waves, Wave(waveType))
+end
+
 function Game:update(delta)
     if self.isActive then
         self.entities:update(delta)
+
+        for _, wave in ipairs(self.waves) do
+            wave:update(delta)
+        end
 
         self.stageTimer = self.stageTimer + delta
         self.spawnTimer = self.spawnTimer + delta
 
         if self.spawnTimer > 3 then
-            self:spawnEnemy()
+            self:spawnWave()
             self.spawnTimer = 0
         end
     end

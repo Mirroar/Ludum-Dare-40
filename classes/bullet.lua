@@ -1,13 +1,19 @@
 Bullet = class(Entity)
 
 Bullet.PLAYER_SHOT = 1
+Bullet.ENEMY_SHOT = 2
 
 Bullet.definitions = {
     [Bullet.PLAYER_SHOT] = {
         speed = 500,
         lifetime = 3,
-        radius = 1,
-    }
+        radius = 5,
+    },
+    [Bullet.ENEMY_SHOT] = {
+        speed = 200,
+        lifetime = 5,
+        radius = 3,
+    },
 }
 
 function Bullet:construct(x, y, type, direction)
@@ -67,5 +73,9 @@ end
 
 function Bullet:draw()
     -- self:debugMath()
-    textures:DrawSprite("bullet", self.x, self.y, self.rotation)
+    if self.bulletType == Bullet.PLAYER_SHOT then
+        textures:DrawSprite("bullet", self.x, self.y, self.rotation)
+    elseif self.bulletType == Bullet.ENEMY_SHOT then
+        textures:DrawSprite("enemy_bullet", self.x, self.y, self.rotation)
+    end
 end

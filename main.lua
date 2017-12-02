@@ -14,6 +14,7 @@ require('classes/menu')
 require('classes/log')
 require('classes/tweenmanager')
 require('classes/game')
+require('classes/wave')
 
 -- Makes sure angles are always between 0 and 360.
 function angle(x)
@@ -60,6 +61,7 @@ local function LoadTextures()
     textures:DefineTile("player", 1, 1)
     textures:DefineTile("bullet", 2, 1)
     textures:DefineTile("enemy", 3, 1)
+    textures:DefineTile("enemy_bullet", 4, 1)
     textures:DefineTile("upgrade", 1, 2)
 end
 
