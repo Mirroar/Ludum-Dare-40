@@ -98,3 +98,12 @@ function Player:update(delta)
     -- Allow attachment entities to get removed and stuff.
     self.attachments:update()
 end
+
+function Player:Destroy()
+    -- Also destroy all attachments.
+    for _, attachment in ipairs(self.attachments.entities) do
+        attachment:Destroy()
+    end
+
+    Actor.Destroy(self)
+end

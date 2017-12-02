@@ -96,7 +96,7 @@ function love.load()
     menu = Menu()
 
     menu:AddItem("Start", function()
-        game:initStage()
+        game:initStage(1)
     end)
 
     menu:AddItem("Exit", function()

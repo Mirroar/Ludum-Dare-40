@@ -72,6 +72,7 @@ function Enemy:Destroy()
     -- Create a part that flies towards the player to "upgrade".
     local upgrade = Upgrade(self.x, self.y)
     game.entities:AddEntity(upgrade)
+    game.kills = game.kills + 1
 
     Actor.Destroy(self)
 end
