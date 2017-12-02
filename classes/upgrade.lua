@@ -28,6 +28,7 @@ function Upgrade:moveWithPlayer()
 
     self.x = game.player.x + dx
     self.y = game.player.y + dy
+    self.rotation = angle(game.player.rotation + self.attachAngle)
 end
 
 function Upgrade:moveToAttach(delta)
