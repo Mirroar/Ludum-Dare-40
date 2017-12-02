@@ -3,7 +3,9 @@ Player = class(Actor)
 function Player:construct(...)
     Actor.construct(self, ...)
     self.rotation = 0
-    self.speed = 100
+    self.speed = 200
+
+    self.cooldown = 0.3
 end
 
 function Player:draw()
@@ -11,26 +13,28 @@ function Player:draw()
 end
 
 function Player:update(delta)
+    Actor.update(self, delta)
+
     -- @todo Maybe even support game pad!
 
     -- Try to face the mouse cursor.
-    local x, y = love.mouse.getPosition()
+    local mouseX, mouseY = love.mouse.getPosition()
 
     -- @todo Turn towards the rotation, don't snap do it instantly.
-    self.rotation = self:GetAngleTo(x, y)
+    self.rotation = self:GetAngleTo(mouseX, mouseY)
 
     -- Detect direction of player movement.
     local mx, my = 0, 0
-    if love.keyboard.isDown('w') then
+    if love.keyboard.isDown('w', 'up') then
         my = my - 1
     end
-    if love.keyboard.isDown('s') then
+    if love.keyboard.isDown('s', 'down') then
         my = my + 1
     end
-    if love.keyboard.isDown('a') then
+    if love.keyboard.isDown('a', 'left') then
         mx = mx - 1
     end
-    if love.keyboard.isDown('d') then
+    if love.keyboard.isDown('d', 'right') then
         mx = mx + 1
     end
 
@@ -39,5 +43,13 @@ function Player:update(delta)
 
         self.x = self.x - self.speed * delta * math.sin(mAngle)
         self.y = self.y + self.speed * delta * math.cos(mAngle)
+    end
+
+    -- Let the player fire
+    if love.mouse.isDown(1) then
+        if self:TryFire() then
+            local bullet = Bullet(self.x, self.y, Bullet.PLAYER_SHOT, self.rotation)
+            game.entities:AddEntity(bullet)
+        end
     end
 end

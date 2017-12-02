@@ -56,6 +56,7 @@ local function LoadTextures()
     -- textures:SetTilePadding(2, 2)
     -- textures:SetTileOffset(2, 2)
     textures:DefineTile("player", 1, 1)
+    textures:DefineTile("bullet", 2, 1)
 end
 
 -- Loads and defines all needed sounds.

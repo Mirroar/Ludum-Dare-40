@@ -66,6 +66,11 @@ function Entity:SetVelocity(vx, vy)
     self.vy = vy
 end
 
+function Entity:SetMoveDirection(rotation, velocity)
+    self.vx = math.sin(rotation / 180 * math.pi) * velocity
+    self.vy = -math.cos(rotation / 180 * math.pi) * velocity
+end
+
 function Entity:GetFriction()
     return self.friction
 end
