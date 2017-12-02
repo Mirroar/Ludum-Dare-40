@@ -11,6 +11,7 @@ require('classes/entitymanager')
 require('classes/menu')
 require('classes/log')
 require('classes/tweenmanager')
+require('classes/game')
 
 -- Makes sure angles are always between 0 and 360.
 function angle(x)
@@ -91,7 +92,7 @@ function love.load()
     menu = Menu()
 
     menu:AddItem("Start", function()
-        -- @todo
+        game:initStage()
     end)
 
     menu:AddItem("Exit", function()
@@ -100,11 +101,14 @@ function love.load()
 
     log = Log()
     log:insert('initialized...')
+
+    game = Game()
 end
 
 -- Handles per-frame state updates.
 function love.update(delta)
     menu:update(delta)
+    game:update(delta)
 end
 
 -- Draws a frame.
@@ -113,21 +117,22 @@ function love.draw()
     love.graphics.setBackgroundColor(32, 32, 32)
     love.graphics.clear()
 
-    -- Draw active modules.
-    if currentModule and currentModule.object.draw then
-        love.graphics.push()
-        love.graphics.translate(0, 200)
-        love.graphics.setColor(255, 255, 255)
-        currentModule.object:draw()
-        love.graphics.pop()
+    love.graphics.setColor(255, 255, 255)
+
+    game:draw()
+
+    if not game.isActive then
+        menu:draw()
     end
 
-    love.graphics.setColor(255, 255, 255)
-    menu:draw()
+    love.graphics.push()
+    love.graphics.translate(0, 600)
     log:draw()
+    love.graphics.pop()
 end
 
 -- Handles pressed keys.
 function love.keypressed(key, isRepeat)
     menu:keypressed(key)
+    game:keypressed(key)
 end
