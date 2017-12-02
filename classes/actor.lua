@@ -8,6 +8,7 @@ function Actor:construct(...)
     self.hasFired = false
     self.maxHitpoints = 5
     self.hitpoints = self.maxHitpoints
+    self.radius = 7
 end
 
 function Actor:Hit(damage)

@@ -6,6 +6,7 @@ Bullet.definitions = {
     [Bullet.PLAYER_SHOT] = {
         speed = 500,
         lifetime = 3,
+        radius = 1,
     }
 }
 
@@ -17,6 +18,7 @@ function Bullet:construct(x, y, type, direction)
     self:SetMoveDirection(direction, Bullet.definitions[type].speed)
 
     self.lifetime = Bullet.definitions[type].lifetime
+    self.radius = Bullet.definitions[type].radius
 end
 
 function Bullet:update(delta)
@@ -26,7 +28,7 @@ function Bullet:update(delta)
     if self.bulletType == Bullet.PLAYER_SHOT then
         for _, entity in ipairs(game.entities.entities) do
             if entity:IsInstanceOf(Enemy) then
-                if self:GetDistanceTo(entity.x, entity.y) < 20 then
+                if self:GetDistanceTo(entity.x, entity.y) < self.radius + entity.radius then
                     self:Destroy()
                     entity:Hit()
                 end

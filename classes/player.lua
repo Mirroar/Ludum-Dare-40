@@ -46,7 +46,7 @@ function Player:update(delta)
     end
 
     -- Let the player fire
-    if love.mouse.isDown(1) then
+    if love.mouse.isDown(1) or love.keyboard.isDown('space') then
         if self:TryFire() then
             local bullet = Bullet(self.x, self.y, Bullet.PLAYER_SHOT, self.rotation)
             game.entities:AddEntity(bullet)
