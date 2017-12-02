@@ -61,6 +61,11 @@ function Enemy:update(delta)
     if Enemy.types[self.enemyType].update then
         Enemy.types[self.enemyType].update(self, delta)
     end
+
+    -- Destroy enemies that move too far out of bounds
+    if self.x < -1000 or self.y < -1000 or self.x > game.width + 1000 or self.y > game.height + 1000 then
+        self.isDestroyed = true
+    end
 end
 
 function Enemy:Destroy()

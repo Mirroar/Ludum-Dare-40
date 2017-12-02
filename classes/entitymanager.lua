@@ -17,7 +17,9 @@ end
 function EntityManager:update(delta)
     local toRemove = {}
     for index, entity in ipairs(self.entities) do
-        entity:update(delta)
+        if delta then
+            entity:update(delta)
+        end
 
         if entity.isDestroyed then
             -- We insert entity indexes in reverse order to remove them

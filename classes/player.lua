@@ -7,18 +7,18 @@ function Player:construct(...)
 
     self.cooldown = 0.3
 
-    self.maxHP = 10
-    self.hp = self.maxHP
+    self.maxHitpoints = 10
+    self.hitpoints = self.maxHitpoints
 
-    self.attachments = {}
+    self.attachments = EntityManager()
 end
 
 function Player:attach(attachment)
-    for _, attachment in ipairs(self.attachments) do
+    for _, attachment in ipairs(self.attachments.entities) do
         -- Move old attachments closer to core.
         attachment.attachDistance = attachment.attachDistance * 0.99
     end
-    table.insert(self.attachments, attachment)
+    self.attachments:AddEntity(attachment)
 end
 
 function Player:draw()
@@ -42,7 +42,7 @@ function Player:update(delta)
 
     -- Turn towards the rotation.
     local rotationSpeed = 10
-    for i = 1, #self.attachments do
+    for i = 1, #self.attachments.entities do
         rotationSpeed = rotationSpeed * 0.95
     end
     self.rotation = lerpAngle(self.rotation, self:GetAngleTo(mouseX, mouseY), rotationSpeed * delta)
@@ -64,7 +64,7 @@ function Player:update(delta)
 
     if mx ~= 0 or my ~= 0 then
         local mAngle = math.atan2(-mx, my)
-        local speedFactor = 10 / (10 + #self.attachments)
+        local speedFactor = 10 / (10 + #self.attachments.entities)
 
         self.x = self.x - self.speed * speedFactor * delta * math.sin(mAngle)
         self.y = self.y + self.speed * speedFactor * delta * math.cos(mAngle)
@@ -77,22 +77,24 @@ function Player:update(delta)
             game.entities:AddEntity(bullet)
         end
 
-        for _, attachment in ipairs(self.attachments) do
-            attachment.cooldown = math.sqrt(#self.attachments) + love.math.randomNormal(#self.attachments) / 10
+        for _, attachment in ipairs(self.attachments.entities) do
+            attachment.cooldown = math.sqrt(#self.attachments.entities) + love.math.randomNormal(#self.attachments.entities) / 10
             if attachment:TryFire() then
-                local bullet = Bullet(attachment.x, attachment.y, Bullet.PLAYER_SHOT, angle(self:GetAngleTo(mouseX, mouseY) + love.math.randomNormal(#self.attachments)))
+                local bullet = Bullet(attachment.x, attachment.y, Bullet.PLAYER_SHOT, angle(self:GetAngleTo(mouseX, mouseY) + love.math.randomNormal(#self.attachments.entities)))
                 game.entities:AddEntity(bullet)
             end
         end
     end
 
     -- Slowly recover hp if core is damaged.
-    if self.hp < self.maxHP then
-        self.hp = self.hp + delta * 0.1
+    if self.hitpoints < self.maxHitpoints then
+        self.hitpoints = self.hitpoints + delta * 0.1
 
-        if self.hp > self.maxHP then
-            self.hp = self.maxHP
+        if self.hitpoints > self.maxHitpoints then
+            self.hitpoints = self.maxHitpoints
         end
     end
 
+    -- Allow attachment entities to get removed and stuff.
+    self.attachments:update()
 end

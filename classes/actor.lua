@@ -12,6 +12,8 @@ function Actor:construct(...)
 end
 
 function Actor:Hit(damage)
+    if self.isDestroyed then return end
+
     self.hitpoints = self.hitpoints - (damage or 1)
     if self.hitpoints <= 0 then
         self:Destroy()

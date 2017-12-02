@@ -3,16 +3,18 @@ Bullet = class(Entity)
 Bullet.PLAYER_SHOT = 1
 Bullet.ENEMY_SHOT = 2
 
-Bullet.definitions = {
+Bullet.types = {
     [Bullet.PLAYER_SHOT] = {
         speed = 500,
         lifetime = 3,
         radius = 5,
+        friendly = true,
     },
     [Bullet.ENEMY_SHOT] = {
         speed = 200,
         lifetime = 5,
         radius = 3,
+        friendly = false,
     },
 }
 
@@ -21,24 +23,39 @@ function Bullet:construct(x, y, type, direction)
 
     self.bulletType = type
     self.rotation = direction
-    self:SetMoveDirection(direction, Bullet.definitions[type].speed)
+    self:SetMoveDirection(direction, Bullet.types[type].speed)
 
-    self.lifetime = Bullet.definitions[type].lifetime
-    self.radius = Bullet.definitions[type].radius
+    self.lifetime = Bullet.types[type].lifetime
+    self.radius = Bullet.types[type].radius
 end
 
 function Bullet:update(delta)
     Entity.update(self, delta)
 
-    -- Check if we hit anything.
-    if self.bulletType == Bullet.PLAYER_SHOT then
+    if Bullet.types[self.bulletType].friendly then
+        -- Check if we hit an enemy.
         for _, entity in ipairs(game.entities.entities) do
             if entity:IsInstanceOf(Enemy) then
                 if self:GetDistanceTo(entity.x, entity.y) < self.radius + entity.radius then
                     self:Destroy()
                     entity:Hit()
+                    break
                 end
             end
+        end
+    else
+        -- Check if the player is hit.
+        for _, attachment in ipairs(game.player.attachments.entities) do
+            if self:GetDistanceTo(attachment.x, attachment.y) < self.radius + attachment.radius then
+                self:Destroy()
+                attachment:Hit()
+                break
+            end
+        end
+
+        if self:GetDistanceTo(game.player.x, game.player.y) < self.radius + game.player.radius then
+            self:Destroy()
+            game.player:Hit()
         end
     end
 

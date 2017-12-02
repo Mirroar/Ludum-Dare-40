@@ -34,7 +34,7 @@ end
 function Upgrade:moveToAttach(delta)
     -- Move more towards player
     local playerDistance = self:GetDistanceTo(game.player.x, game.player.y)
-    for _, attachment in ipairs(game.player.attachments) do
+    for _, attachment in ipairs(game.player.attachments.entities) do
         playerDistance = math.min(playerDistance, self:GetDistanceTo(attachment.x, attachment.y))
     end
 
@@ -51,14 +51,15 @@ function Upgrade:moveToAttach(delta)
 
         -- Calculate attach distance if other parts are in the way.
         local collides = true
-        while collides and self.attachDistance < 100 do
+        while collides and self.attachDistance < 500 do
             collides = false
             self.attachDistance = self.attachDistance + 1
             self:moveWithPlayer()
-            for _, attachment in ipairs(game.player.attachments) do
+            for _, attachment in ipairs(game.player.attachments.entities) do
                 if attachment ~= self then
                     if self:GetDistanceTo(attachment.x, attachment.y) < self.radius + attachment.radius then
                         collides = true
+                        self.parentAttachment = attachment
                         break
                     end
                 end
@@ -69,7 +70,7 @@ function Upgrade:moveToAttach(delta)
     end
 
     local force = 500 + math.max(1000 - playerDistance, 0)
-    local vKeep = lerp(1, 0, self.attachTimer)
+    local vKeep = lerp(1, 0, self.attachTimer / 3)
 
     local playerAngle = self:GetAngleTo(game.player.x, game.player.y)
     self.vx = self.vx * vKeep + (1 - vKeep) * math.sin(playerAngle / 180 * math.pi) * force
@@ -86,4 +87,16 @@ end
 
 function Upgrade:draw()
     textures:DrawSprite("upgrade", self.x, self.y, self.rotation)
+end
+
+function Upgrade:Destroy()
+    -- Check if any other attachmens have this one as parent, and destroy
+    -- those, too.
+    for _, attachment in ipairs(game.player.attachments.entities) do
+        if attachment.parentAttachment and attachment.parentAttachment == self then
+            attachment:Destroy()
+        end
+    end
+
+    Actor.Destroy(self)
 end
