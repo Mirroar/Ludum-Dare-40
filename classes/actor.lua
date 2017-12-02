@@ -6,7 +6,7 @@ function Actor:construct(...)
     self.cooldown = 1
     self.currentCooldown = 0
     self.hasFired = false
-    self.maxHitpoints = 5
+    self.maxHitpoints = 1
     self.hitpoints = self.maxHitpoints
     self.radius = 7
 end

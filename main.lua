@@ -60,6 +60,7 @@ local function LoadTextures()
     textures:DefineTile("player", 1, 1)
     textures:DefineTile("bullet", 2, 1)
     textures:DefineTile("enemy", 3, 1)
+    textures:DefineTile("upgrade", 1, 2)
 end
 
 -- Loads and defines all needed sounds.

@@ -6,6 +6,12 @@ function Player:construct(...)
     self.speed = 200
 
     self.cooldown = 0.3
+
+    self.attachments = {}
+end
+
+function Player:attach(attachment)
+    table.insert(self.attachments, attachment)
 end
 
 function Player:draw()
