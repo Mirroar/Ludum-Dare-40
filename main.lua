@@ -55,10 +55,7 @@ local function LoadTextures()
     -- textures:SetTileSize(32, 32)
     -- textures:SetTilePadding(2, 2)
     -- textures:SetTileOffset(2, 2)
-    -- textures:DefineTile("Spinner1", 1, 1)
-    -- textures:DefineTile("Spinner2", 2, 1)
-    -- textures:DefineTile("Spinner3", 3, 1)
-    -- textures:DefineTile("Spinner4", 4, 1)
+    textures:DefineTile("player", 1, 1)
 end
 
 -- Loads and defines all needed sounds.

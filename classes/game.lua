@@ -2,6 +2,17 @@ Game = class()
 
 function Game:construct()
     self.isActive = false
+
+    self.entities = EntityManager()
+
+    self.player = Player()
+    self.entities:AddEntity(self.player)
+
+    self.width = 1280
+    self.height = 720
+
+    self.player.x = self.width / 2
+    self.player.y = self.height / 2
 end
 
 function Game:initStage()
@@ -14,6 +25,7 @@ end
 
 function Game:draw()
     if self.isActive then
+        self.entities:draw()
     end
 end
 
@@ -25,5 +37,6 @@ end
 
 function Game:update(delta)
     if self.isActive then
+        self.entities:update(delta)
     end
 end

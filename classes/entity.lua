@@ -77,10 +77,10 @@ function Entity:SetFriction(f)
 end
 
 function Entity:GetAngleTo(x, y)
-    local dx = x - self.x
+    local dx = self.x - x
     local dy = self.y - y
 
-    return angle(math.atan2(dx, dy) * 180 / math.pi)
+    return angle(math.atan2(-dx, dy) * 180 / math.pi)
 end
 
 function Entity:update(delta)
