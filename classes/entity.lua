@@ -15,6 +15,8 @@ function Entity:construct(x, y)
     self.vx = 0
     self.vy = 0
     self.friction = 0
+    self.oldX = x or 0
+    self.oldY = y or 0
 end
 
 function Entity:Destroy()
@@ -93,7 +95,17 @@ function Entity:GetAngleTo(x, y)
     return angle(math.atan2(-dx, dy) * 180 / math.pi)
 end
 
+function Entity:GetDistanceTo(x, y)
+    local dx = self.x - x
+    local dy = self.y - y
+
+    return math.sqrt(dx * dx + dy * dy)
+end
+
 function Entity:update(delta)
+    self.oldX = self.x
+    self.oldY = self.y
+
     -- only do movement calculation if object has a noticeable velocity
     if math.abs(self.vx) > 0.5 or math.abs(self.vy) > 0.5 then
         local vAngle = math.atan2(self.vx, self.vy)

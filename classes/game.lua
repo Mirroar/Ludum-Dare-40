@@ -17,6 +17,9 @@ end
 
 function Game:initStage()
     self.isActive = true
+
+    self.entities:AddEntity(Enemy(100, 100))
+    self.entities:AddEntity(Enemy(100, 600))
 end
 
 function Game:endStage()

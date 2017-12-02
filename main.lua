@@ -7,6 +7,7 @@ require('classes/entity')
 require('classes/bullet')
 require('classes/actor')
 require('classes/player')
+require('classes/enemy')
 require('classes/entitymanager')
 require('classes/menu')
 require('classes/log')
@@ -57,6 +58,7 @@ local function LoadTextures()
     -- textures:SetTileOffset(2, 2)
     textures:DefineTile("player", 1, 1)
     textures:DefineTile("bullet", 2, 1)
+    textures:DefineTile("enemy", 3, 1)
 end
 
 -- Loads and defines all needed sounds.

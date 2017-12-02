@@ -6,6 +6,15 @@ function Actor:construct(...)
     self.cooldown = 1
     self.currentCooldown = 0
     self.hasFired = false
+    self.maxHitpoints = 5
+    self.hitpoints = self.maxHitpoints
+end
+
+function Actor:Hit(damage)
+    self.hitpoints = self.hitpoints - (damage or 1)
+    if self.hitpoints <= 0 then
+        self:Destroy()
+    end
 end
 
 function Actor:TryFire()
