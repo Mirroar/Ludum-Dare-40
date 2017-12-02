@@ -6,7 +6,7 @@ Time to make a game in 2 days!
 Ideas
 -----
 
-* Vertical scrolling shooter or twin-stick
+* Twin-stick shooter
 * Gain parts when defeating enemies
   * Parts have positive effects (weapons, shielding, propulsion)
   * Parts have negative effects (Trying to move you into bullets, slow you down, corrupt systems)
@@ -26,4 +26,4 @@ Ideas
 Current Progress
 ----------------
 
-* todo
+* Player can move and shoot.

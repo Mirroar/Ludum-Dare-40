@@ -8,12 +8,17 @@ function Entity:construct(x, y)
         self.AssertArgumentType(y, "number")
     end
 
+    self.isDestroyed = false
     self.x = x or 0
     self.y = y or 0
     self.rotation = 0
     self.vx = 0
     self.vy = 0
     self.friction = 0
+end
+
+function Entity:Destroy()
+    self.isDestroyed = true
 end
 
 function Entity:GetX()

@@ -15,8 +15,19 @@ function EntityManager:GetCount()
 end
 
 function EntityManager:update(delta)
-    for _, entity in ipairs(self.entities) do
+    local toRemove = {}
+    for index, entity in ipairs(self.entities) do
         entity:update(delta)
+
+        if entity.isDestroyed then
+            -- We insert entity indexes in reverse order to remove them
+            -- from the back later.
+            table.insert(toRemove, 1, index)
+        end
+    end
+
+    for _, index in ipairs(toRemove) do
+        table.remove(self.entities, index)
     end
 end
 
