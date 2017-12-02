@@ -73,5 +73,13 @@ function Player:update(delta)
             local bullet = Bullet(self.x, self.y, Bullet.PLAYER_SHOT, self.rotation)
             game.entities:AddEntity(bullet)
         end
+
+        for _, attachment in ipairs(self.attachments) do
+            attachment.cooldown = math.sqrt(#self.attachments) + love.math.randomNormal(#self.attachments) / 10
+            if attachment:TryFire() then
+                local bullet = Bullet(attachment.x, attachment.y, Bullet.PLAYER_SHOT, angle(self:GetAngleTo(mouseX, mouseY) + love.math.randomNormal(#self.attachments)))
+                game.entities:AddEntity(bullet)
+            end
+        end
     end
 end
