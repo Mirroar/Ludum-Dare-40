@@ -42,10 +42,54 @@ Enemy.types = {
         radius = 20,
         cooldown = 0.2,
     },
+    seeker = {
+        draw = function (self, delta)
+            local xOffset = math.sin(self.rotation * math.pi / 180) * 30
+            local yOffset = -math.cos(self.rotation * math.pi / 180) * 30
+            xOffset = xOffset + math.sin(angle(self.rotation - 90) * math.pi / 180) * 50
+            yOffset = yOffset + -math.cos(angle(self.rotation - 90) * math.pi / 180) * 50
+
+            love.graphics.setColor(255, 255, 255, love.math.random(128, 255))
+            love.graphics.draw(images.exhaust, self.x + xOffset, self.y + yOffset, self.rotation * math.pi / 180)
+
+            love.graphics.setColor(255, 255, 255)
+            textures:DrawSprite("enemy_seeker", self.x, self.y, self.rotation, 2, 2)
+            love.graphics.draw(images.redLight, self.x - 100, self.y - 100)
+        end,
+        update = function (self, delta)
+            local angle = self:GetAngleTo(game.player)
+            self:SetMoveDirection(angle, math.sqrt(self.timer) * 100)
+            self.rotation = angle
+
+            -- Check if the player is hit.
+            for _, attachment in ipairs(game.player.attachments.entities) do
+                if self:GetDistanceTo(attachment.x, attachment.y) < self.radius + attachment.radius then
+                    self:Destroy()
+                    attachment:Hit(3)
+                    break
+                end
+            end
+
+            if self:GetDistanceTo(game.player.x, game.player.y) < self.radius + game.player.radius then
+                self:Destroy()
+                game.player:Hit(3)
+            end
+        end,
+        radius = 20,
+    },
 }
 
 function Enemy:construct(x, y, type, options, ...)
     Actor.construct(self, x, y, type, options, ...)
+
+    self.timer = 0
+    self.enemyType = type
+
+    for k, v in pairs(Enemy.types[type]) do
+        if k ~= 'update' then
+            self[k] = v
+        end
+    end
 
     if options then
         for k, v in pairs(options) do
@@ -53,16 +97,9 @@ function Enemy:construct(x, y, type, options, ...)
         end
     end
 
-    self.enemyType = type
-    self.radius = Enemy.types[type].radius or 7
-    self.cooldown = Enemy.types[type].cooldown or 1
-    self.timer = 0
     self.timerSpeed = self.timerSpeed or 1
     self.startX = x
     self.startY = y
-    if Enemy.types[type].draw then
-        self.draw = Enemy.types[type].draw
-    end
 end
 
 function Enemy:draw()

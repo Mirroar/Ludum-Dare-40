@@ -89,6 +89,11 @@ function Entity:SetFriction(f)
 end
 
 function Entity:GetAngleTo(x, y)
+    if type(x) == 'table' and x.x and x.y then
+        y = x.y
+        x = x.x
+    end
+
     local dx = self.x - x
     local dy = self.y - y
 
@@ -96,6 +101,11 @@ function Entity:GetAngleTo(x, y)
 end
 
 function Entity:GetDistanceTo(x, y)
+    if type(x) == 'table' and x.x and x.y then
+        y = x.y
+        x = x.x
+    end
+
     local dx = self.x - x
     local dy = self.y - y
 

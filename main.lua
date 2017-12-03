@@ -62,6 +62,7 @@ local function LoadTextures()
     -- textures:SetTileOffset(2, 2)
     textures:DefineSprite("player", 0, 32, 32, 32)
     textures:DefineSprite("enemy_sideways", 32, 32, 16, 32)
+    textures:DefineSprite("enemy_seeker", 48, 32, 16, 32)
     -- textures:DefineTile("player", 1, 1)
     textures:DefineTile("bullet", 2, 1)
     textures:DefineTile("enemy", 3, 1)
@@ -74,6 +75,7 @@ local function LoadTextures()
     images = {
         greenLight = love.graphics.newImage('images/GreenLight.png'),
         redLight = love.graphics.newImage('images/RedLight.png'),
+        exhaust = love.graphics.newImage('images/Exhaust.png'),
     }
 end
 

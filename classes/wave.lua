@@ -21,9 +21,20 @@ Wave.types = {
     },
     spinner = {
         init = function (self)
-            game.entities:AddEntity(Enemy(100, 100, 'spinner', {}))
+            local x, y = game.player.x, game.player.y
+            while game.player:GetDistanceTo(x, y) < 200 do
+                x, y = love.math.random(100, game.width - 100), love.math.random(100, game.height - 100)
+            end
+            game.entities:AddEntity(Enemy(x, y, 'spinner', {}))
         end,
-    }
+    },
+    seeker = {
+        init = function (self)
+            for i = 1, 4 do
+                game.entities:AddEntity(Enemy(i * 200, -100, 'seeker', {rotation = 180}))
+            end
+        end,
+    },
 }
 
 function Wave:construct(type)

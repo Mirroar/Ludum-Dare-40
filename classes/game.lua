@@ -7,16 +7,17 @@ Game.stages = {
         },
         waves = {
             'sideways',
+            'seeker',
         },
         waveTimer = 5,
     },
     {
         goals = {
-            kills = 200,
+            kills = 50,
         },
         waves = {
             'sideways',
-            'spinner'
+            'spinner',
         },
         waveTimer = 3,
     },
@@ -26,6 +27,8 @@ Game.stages = {
         },
         waves = {
             'sideways',
+            'spinner',
+            'seeker',
         },
         waveTimer = 2,
     },
@@ -37,6 +40,8 @@ Game.stages = {
         },
         waves = {
             'sideways',
+            'spinner',
+            'seeker',
         },
         waveTimer = 2,
     },
