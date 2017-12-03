@@ -3,15 +3,20 @@ Wave = class()
 Wave.types = {
     sideways = {
         init = function (self)
-            game.entities:AddEntity(Enemy(-100, 100, 'sideways'))
-            game.entities:AddEntity(Enemy(-200, 100, 'sideways'))
-            game.entities:AddEntity(Enemy(-300, 100, 'sideways'))
+            local dir = 'right'
+            local x = 0
+            local xOffset = -100
+            if love.math.random() < 0.5 then
+                dir = 'left'
+                x = game.width
+                xOffset = 100
+            end
 
-            game.entities:AddEntity(Enemy(game.width + 100, game.height - 100, 'sideways', {dir = "left"}))
-            game.entities:AddEntity(Enemy(game.width + 200, game.height - 100, 'sideways', {dir = "left"}))
-            game.entities:AddEntity(Enemy(game.width + 300, game.height - 100, 'sideways', {dir = "left"}))
+            local y = love.math.random(100, game.height - 100)
 
-            log:insert('sideways wave initialized')
+            for i = 1, 3 do
+                game.entities:AddEntity(Enemy(x + xOffset * i, y, 'sideways', {dir = dir, timerSpeed = 0.5}))
+            end
         end,
     },
 }

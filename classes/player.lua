@@ -24,18 +24,17 @@ function Player:attach(attachment)
     self.attachments:AddEntity(attachment)
 end
 
-function Player:draw()
+function Player:drawLate()
     -- Draw aim assistance line.
     local dx = math.sin(self.rotation * math.pi / 180)
     local dy = -math.cos(self.rotation * math.pi / 180)
     love.graphics.setColor(128, 128, 128)
     love.graphics.line(self.x, self.y, self.x + 300 * dx, self.y + 300 * dy)
 
+    -- Draw player sprite.
     love.graphics.setColor(255, 255, 255)
     textures:DrawSprite("player", self.x, self.y, self.rotation, 2)
-end
 
-function Player:drawLate()
     -- Draw status light.
     local lightAngle = angle(self.rotation - 50)
     local lightX = self.x + 13 * math.sin(lightAngle * math.pi / 180) - 100
@@ -66,7 +65,7 @@ function Player:update(delta)
     -- Turn towards the rotation.
     local rotationSpeed = 10
     for i = 1, #self.attachments.entities do
-        rotationSpeed = rotationSpeed * 0.95
+        rotationSpeed = rotationSpeed * 0.97
     end
     self.rotation = lerpAngle(self.rotation, self:GetAngleTo(mouseX, mouseY), rotationSpeed * delta)
 
@@ -87,7 +86,7 @@ function Player:update(delta)
 
     if mx ~= 0 or my ~= 0 then
         local mAngle = math.atan2(-mx, my)
-        local speedFactor = 10 / (10 + #self.attachments.entities)
+        local speedFactor = 50 / (50 + #self.attachments.entities)
 
         self.x = self.x - self.speed * speedFactor * delta * math.sin(mAngle)
         self.y = self.y + self.speed * speedFactor * delta * math.cos(mAngle)
@@ -103,7 +102,8 @@ function Player:update(delta)
         for _, attachment in ipairs(self.attachments.entities) do
             attachment.cooldown = math.sqrt(#self.attachments.entities) + love.math.randomNormal(#self.attachments.entities) / 10
             if attachment:TryFire() then
-                local bullet = Bullet(attachment.x, attachment.y, Bullet.PLAYER_SHOT, angle(self:GetAngleTo(mouseX, mouseY) + love.math.randomNormal(#self.attachments.entities)))
+                -- local bullet = Bullet(attachment.x, attachment.y, Bullet.PLAYER_SHOT, angle(self:GetAngleTo(mouseX, mouseY) + love.math.randomNormal(#self.attachments.entities)))
+                local bullet = Bullet(attachment.x, attachment.y, Bullet.PLAYER_SHOT, attachment.rotation)
                 game.entities:AddEntity(bullet)
             end
         end

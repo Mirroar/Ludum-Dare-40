@@ -105,6 +105,14 @@ function Upgrade:draw()
     end
 end
 
+function Upgrade:drawLate()
+    if self.isAttached then
+        local offsetX = math.sin(self.rotation * math.pi / 180) * 5
+        local offsetY = -math.cos(self.rotation * math.pi / 180) * 5
+        textures:DrawSprite("upgrade_turret", self.x + offsetX, self.y + offsetY, self.rotation)
+    end
+end
+
 function Upgrade:Destroy()
     -- Check if any other attachmens have this one as parent, and destroy
     -- those, too.

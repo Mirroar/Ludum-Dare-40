@@ -54,11 +54,14 @@ end
 
 -- Loads and defines all needed textures.
 local function LoadTextures()
+    love.graphics.setDefaultFilter('linear', 'linear', 3)
+
     textures = TiledTextureAtlas("images/Textures.png")
     -- textures:SetTileSize(32, 32)
     -- textures:SetTilePadding(2, 2)
     -- textures:SetTileOffset(2, 2)
     textures:DefineSprite("player", 0, 32, 32, 32)
+    textures:DefineSprite("enemy_sideways", 32, 32, 16, 32)
     -- textures:DefineTile("player", 1, 1)
     textures:DefineTile("bullet", 2, 1)
     textures:DefineTile("enemy", 3, 1)
@@ -66,6 +69,7 @@ local function LoadTextures()
     textures:DefineTile("upgrade", 1, 2)
     textures:DefineTile("upgrade_attach", 2, 2)
     textures:DefineTile("upgrade_inflight", 3, 2)
+    textures:DefineTile("upgrade_turret", 4, 2)
 
     images = {
         greenLight = love.graphics.newImage('images/GreenLight.png'),

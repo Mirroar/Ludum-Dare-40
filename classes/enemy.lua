@@ -3,7 +3,7 @@ Enemy = class(Actor)
 Enemy.types = {
     sideways = {
         draw = function (self)
-            love.graphics.circle('fill', self.x, self.y, 20)
+            textures:DrawSprite("enemy_sideways", self.x, self.y, self.rotation, 2, 2)
         end,
         update = function (self, delta)
             local timerInt = math.floor(self.timer)
@@ -43,6 +43,7 @@ function Enemy:construct(x, y, type, options, ...)
     self.radius = Enemy.types[type].radius or 7
     self.cooldown = Enemy.types[type].cooldown or 1
     self.timer = 0
+    self.timerSpeed = self.timerSpeed or 1
     self.startX = x
     self.startY = y
     if Enemy.types[type].draw then
@@ -51,13 +52,13 @@ function Enemy:construct(x, y, type, options, ...)
 end
 
 function Enemy:draw()
-    textures:DrawSprite("enemy", self.x, self.y, self.rotation)
+    love.graphics.circle('fill', self.x, self.y, self.radius)
 end
 
 function Enemy:update(delta)
     Actor.update(self, delta)
 
-    self.timer = self.timer + delta
+    self.timer = self.timer + delta * self.timerSpeed
     if Enemy.types[self.enemyType].update then
         Enemy.types[self.enemyType].update(self, delta)
     end

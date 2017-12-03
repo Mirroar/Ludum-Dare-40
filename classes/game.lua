@@ -54,6 +54,7 @@ function Game:initStage(stage)
     self.activeStage = stage
     self.transitionStage = false
     self.waves = {}
+    self.backgroundLines = {}
 
     if not self.player or self.player.isDestroyed then
         self.player = Player()
@@ -74,6 +75,7 @@ function Game:endStage()
     for _, entity in ipairs(self.entities.entities) do
         entity.isDestroyed = true
     end
+    self.backgroundLines = {}
 end
 
 function Game:checkStageConditions()
@@ -106,9 +108,56 @@ end
 
 function Game:draw()
     if self.isActive then
+        -- Draw background.
+        love.graphics.push()
+        love.graphics.translate(-game.player.x * 0.2, -game.player.y * 0.2)
+        love.graphics.scale(1.2, 1.2)
+        local lineSpacing = 150
+        love.graphics.setColor(0, 50, 0)
+        for i = 1, math.ceil(game.width / lineSpacing) do
+            love.graphics.line(0, i * lineSpacing, game.width, i * lineSpacing)
+            love.graphics.line(i * lineSpacing, 0, i * lineSpacing, game.height)
+        end
+        love.graphics.setLineWidth(7)
+        for i = 1, 3 do
+            local line = self.backgroundLines[i]
+            if line then
+                local decay = 1 / (line.numSegments - 1)
+                local drawn = false
+
+                for i = line.numSegments, 2, -1 do
+
+                    local segmentIndex = #line.segments - line.numSegments + i
+
+                    if segmentIndex > 1 then
+                        if i == line.numSegments then
+                            love.graphics.setColor(255, 255, 255, 128)
+                            love.graphics.draw(images.greenLight, line.segments[segmentIndex].x - 100, line.segments[segmentIndex].y - 100)
+                        end
+
+                        if line.segments[segmentIndex].x >= 0 and line.segments[segmentIndex].y >= 0 and line.segments[segmentIndex].x <= game.width and line.segments[segmentIndex].y <= game.height then
+
+                            love.graphics.setColor(0, 255, 0, 64 * decay * i)
+
+                            love.graphics.line(line.segments[segmentIndex].x, line.segments[segmentIndex].y, line.segments[segmentIndex - 1].x, line.segments[segmentIndex - 1].y)
+                            drawn = true
+                        end
+                    else
+                        break
+                    end
+                end
+
+                if not drawn and #line.segments > 3 then line.destroyed = true end
+            end
+        end
+        love.graphics.pop()
+        love.graphics.setColor(255, 255, 255)
+        love.graphics.setLineWidth(1)
+
+        -- Draw all entities.
         self.entities:draw()
 
-        -- Show some stats to the player.
+        -- Draw HUD.
         love.graphics.print("HP: "..math.floor(game.player.hitpoints).."/"..game.player.maxHitpoints, 20, 20)
         love.graphics.print("Parts: "..game.player.attachments:GetCount(), 20, 40)
 
@@ -162,6 +211,72 @@ function Game:update(delta)
 
         if self.player.isDestroyed then
             self:endStage()
+        end
+
+        -- Update background lines.
+        for i = 1, 3 do
+            local line = self.backgroundLines[i]
+            if not line or line.destroyed then
+                self.backgroundLines[i] = {
+                    segments = {},
+                    numSegments = love.math.random(5, 30),
+                    cooldown = love.math.random(5),
+                    direction = {x = 0, y = 0},
+                    destroyed = false,
+                    timer = 0,
+                    interval = 0.1,
+                }
+                line = self.backgroundLines[i]
+
+                if love.math.random() < 0.5 then
+                    self.backgroundLines[i].direction.x = (love.math.random(0, 1) * 2 - 1) * 20
+                else
+                    self.backgroundLines[i].direction.y = (love.math.random(0, 1) * 2 - 1) * 20
+                end
+
+                local segment = {x = 0, y = 0}
+                if line.direction.x == 0 then
+                    segment.x = love.math.random(game.width)
+                    if line.direction.y < 0 then
+                        segment.y = game.height
+                    end
+                else
+                    segment.y = love.math.random(game.height)
+                    if line.direction.x < 0 then
+                        segment.x = game.width
+                    end
+                end
+
+                table.insert(line.segments, segment)
+            end
+
+            line.cooldown = line.cooldown - delta
+
+            if line.cooldown <= 0 then
+                -- Change direction
+                line.cooldown = love.math.random(5)
+
+                local temp = line.direction.x
+                line.direction.x = (love.math.random(0, 1) * 2 - 1) * line.direction.y
+                line.direction.y = (love.math.random(0, 1) * 2 - 1) * temp
+            end
+
+            line.timer = line.timer + delta
+
+            while line.timer > line.interval do
+                line.timer = line.timer - line.interval
+
+                -- Remove old segments.
+                if #line.segments > line.numSegments then
+                    table.remove(line.segments, 1)
+                end
+
+                -- Add a new segment.
+                table.insert(line.segments, {
+                    x = line.segments[#line.segments].x + line.direction.x,
+                    y = line.segments[#line.segments].y + line.direction.y,
+                })
+            end
         end
 
         self:checkStageConditions()
