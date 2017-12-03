@@ -27,7 +27,21 @@ Enemy.types = {
         end,
         radius = 20,
         cooldown = 0.5,
-    }
+    },
+    spinner = {
+        draw = function (self)
+            textures:DrawSprite("enemy_sideways", self.x, self.y, self.rotation, 2, 2)
+        end,
+        update = function (self, delta)
+            self.rotation = angle(self.rotation + delta * 60)
+            if self:TryFire() then
+                game.entities:AddEntity(Bullet(self.x, self.y, Bullet.ENEMY_SHOT, self.rotation))
+                game.entities:AddEntity(Bullet(self.x, self.y, Bullet.ENEMY_SHOT, angle(self.rotation + 180)))
+            end
+        end,
+        radius = 20,
+        cooldown = 0.2,
+    },
 }
 
 function Enemy:construct(x, y, type, options, ...)
@@ -71,9 +85,11 @@ end
 
 function Enemy:Destroy()
     -- Create a part that flies towards the player to "upgrade".
-    local upgrade = Upgrade(self.x, self.y)
-    game.entities:AddEntity(upgrade)
-    game.kills = game.kills + 1
+    if love.math.random() < 0.3 then
+        local upgrade = Upgrade(self.x, self.y)
+        game.entities:AddEntity(upgrade)
+        game.kills = game.kills + 1
+    end
 
     Actor.Destroy(self)
 end

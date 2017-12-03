@@ -103,7 +103,7 @@ function Player:update(delta)
             attachment.cooldown = math.sqrt(#self.attachments.entities) + love.math.randomNormal(#self.attachments.entities) / 10
             if attachment:TryFire() then
                 -- local bullet = Bullet(attachment.x, attachment.y, Bullet.PLAYER_SHOT, angle(self:GetAngleTo(mouseX, mouseY) + love.math.randomNormal(#self.attachments.entities)))
-                local bullet = Bullet(attachment.x, attachment.y, Bullet.PLAYER_SHOT, attachment.rotation)
+                local bullet = Bullet(attachment.x, attachment.y, Bullet.PLAYER_SHOT_SLOW, attachment.rotation)
                 game.entities:AddEntity(bullet)
             end
         end

@@ -19,6 +19,11 @@ Wave.types = {
             end
         end,
     },
+    spinner = {
+        init = function (self)
+            game.entities:AddEntity(Enemy(100, 100, 'spinner', {}))
+        end,
+    }
 }
 
 function Wave:construct(type)
@@ -32,4 +37,8 @@ end
 
 function Wave:update(delta)
     self.timer = self.timer + delta
+
+    if Wave.types[self.type].update then
+        Wave.types[self.type].update(self)
+    end
 end

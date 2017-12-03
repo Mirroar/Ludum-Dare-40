@@ -1,12 +1,19 @@
 Bullet = class(Entity)
 
 Bullet.PLAYER_SHOT = 1
-Bullet.ENEMY_SHOT = 2
+Bullet.PLAYER_SHOT_SLOW = 2
+Bullet.ENEMY_SHOT = 11
 
 Bullet.types = {
     [Bullet.PLAYER_SHOT] = {
         speed = 500,
         lifetime = 3,
+        radius = 5,
+        friendly = true,
+    },
+    [Bullet.PLAYER_SHOT_SLOW] = {
+        speed = 200,
+        lifetime = 5,
         radius = 5,
         friendly = true,
     },
@@ -29,10 +36,14 @@ function Bullet:construct(x, y, type, direction)
     self.radius = Bullet.types[type].radius
 end
 
+function Bullet:isFriendly()
+    return Bullet.types[self.bulletType].friendly
+end
+
 function Bullet:update(delta)
     Entity.update(self, delta)
 
-    if Bullet.types[self.bulletType].friendly then
+    if self:isFriendly() then
         -- Check if we hit an enemy.
         for _, entity in ipairs(game.entities.entities) do
             if entity:IsInstanceOf(Enemy) then
@@ -92,6 +103,8 @@ function Bullet:draw()
     -- self:debugMath()
     if self.bulletType == Bullet.PLAYER_SHOT then
         textures:DrawSprite("bullet", self.x, self.y, self.rotation)
+    elseif self.bulletType == Bullet.PLAYER_SHOT_SLOW then
+        textures:DrawSprite("enemy_bullet", self.x, self.y, self.rotation)
     elseif self.bulletType == Bullet.ENEMY_SHOT then
         textures:DrawSprite("enemy_bullet", self.x, self.y, self.rotation)
     end

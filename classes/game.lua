@@ -3,11 +3,12 @@ Game = class()
 Game.stages = {
     {
         goals = {
-            parts = 50,
+            parts = 10,
         },
         waves = {
             'sideways',
         },
+        waveTimer = 5,
     },
     {
         goals = {
@@ -15,7 +16,9 @@ Game.stages = {
         },
         waves = {
             'sideways',
+            'spinner'
         },
+        waveTimer = 3,
     },
     {
         goals = {
@@ -24,6 +27,7 @@ Game.stages = {
         waves = {
             'sideways',
         },
+        waveTimer = 2,
     },
     {
         goals = {
@@ -34,6 +38,7 @@ Game.stages = {
         waves = {
             'sideways',
         },
+        waveTimer = 2,
     },
 }
 
@@ -188,7 +193,8 @@ end
 function Game:spawnWave()
     if self.transitionStage then return end
 
-    local waveType = 'sideways'
+    local stage = Game.stages[self.activeStage]
+    local waveType = stage.waves[love.math.random(#stage.waves)]
 
     table.insert(self.waves, Wave(waveType))
 end
@@ -204,7 +210,7 @@ function Game:update(delta)
         self.stageTimer = self.stageTimer + delta
         self.spawnTimer = self.spawnTimer + delta
 
-        if self.spawnTimer > 3 then
+        if self.spawnTimer > (Game.stages[self.activeStage].waveTimer or 3) then
             self:spawnWave()
             self.spawnTimer = 0
         end
@@ -286,7 +292,7 @@ function Game:update(delta)
             -- before transitioning to the next stage.
             local done = true
             for _, entity in ipairs(self.entities.entities) do
-                if entity:IsInstanceOf(Enemy) or entity:IsInstanceOf(Bullet) then
+                if entity:IsInstanceOf(Enemy) or (entity:IsInstanceOf(Bullet) and not entity:isFriendly()) then
                     done = false
                     break
                 end
