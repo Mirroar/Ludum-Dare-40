@@ -28,10 +28,26 @@ Wave.types = {
             game.entities:AddEntity(Enemy(x, y, 'spinner', {}))
         end,
     },
+    double_spinner = {
+        init = function (self)
+            local x, y = game.player.x, game.player.y
+            while game.player:GetDistanceTo(x, y) < 200 or game.player:GetDistanceTo(game.width - x, game.height - y) < 200 do
+                x, y = love.math.random(100, game.width - 100), love.math.random(100, game.height - 100)
+            end
+            game.entities:AddEntity(Enemy(x, y, 'spinner', {}))
+            game.entities:AddEntity(Enemy(game.width - x, game.height - y, 'spinner', {}))
+        end,
+    },
     seeker = {
         init = function (self)
-            for i = 1, 4 do
-                game.entities:AddEntity(Enemy(i * 200, -100, 'seeker', {rotation = 180}))
+            if love.math.random() < 0.5 then
+                for i = 1, love.math.random(1, 5) do
+                    game.entities:AddEntity(Enemy(love.math.random(100, game.width), (love.math.random(0, 1) * (game.height + 200)) - 100, 'seeker'))
+                end
+            else
+                for i = 1, love.math.random(1, 5) do
+                    game.entities:AddEntity(Enemy((love.math.random(0, 1) * (game.width + 200)) - 100, love.math.random(100, game.height), 'seeker'))
+                end
             end
         end,
     },

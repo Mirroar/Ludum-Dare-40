@@ -31,6 +31,15 @@ function Player:drawLate()
     love.graphics.setColor(128, 128, 128)
     love.graphics.line(self.x, self.y, self.x + 300 * dx, self.y + 300 * dy)
 
+    -- Draw player exhaust.
+    local xOffset = math.sin(self.rotation * math.pi / 180) * 41
+    local yOffset = -math.cos(self.rotation * math.pi / 180) * 41
+    xOffset = xOffset + math.sin(angle(self.rotation - 90) * math.pi / 180) * 50
+    yOffset = yOffset + -math.cos(angle(self.rotation - 90) * math.pi / 180) * 50
+
+    love.graphics.setColor(255, 255, 255, love.math.random(192, 255))
+    love.graphics.draw(images.exhaust, self.x + xOffset, self.y + yOffset, self.rotation * math.pi / 180)
+
     -- Draw player sprite.
     love.graphics.setColor(255, 255, 255)
     textures:DrawSprite("player", self.x, self.y, self.rotation, 2)

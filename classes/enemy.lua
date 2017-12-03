@@ -123,7 +123,12 @@ end
 function Enemy:Destroy()
     -- Create a part that flies towards the player to "upgrade".
     if love.math.random() < 0.3 then
-        local upgrade = Upgrade(self.x, self.y)
+        local upgradeType = 'turret'
+        if self.enemyType == 'seeker' then
+            upgradeType = 'booster'
+        end
+
+        local upgrade = Upgrade(self.x, self.y, upgradeType)
         game.entities:AddEntity(upgrade)
         game.kills = game.kills + 1
     end

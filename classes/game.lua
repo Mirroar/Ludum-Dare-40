@@ -6,7 +6,7 @@ Game.stages = {
             parts = 10,
         },
         waves = {
-            'sideways',
+            -- 'sideways',
             'seeker',
         },
         waveTimer = 5,
@@ -28,6 +28,7 @@ Game.stages = {
         waves = {
             'sideways',
             'spinner',
+            'double_spinner',
             'seeker',
         },
         waveTimer = 2,
@@ -41,6 +42,7 @@ Game.stages = {
         waves = {
             'sideways',
             'spinner',
+            'double_spinner',
             'seeker',
         },
         waveTimer = 2,

@@ -1,6 +1,6 @@
 Upgrade = class(Actor)
 
-function Upgrade:construct(x, y, ...)
+function Upgrade:construct(x, y, type, ...)
     Actor.construct(self, x, y, ...)
 
     local startAngle = angle(game.player:GetAngleTo(self.x, self.y) + love.math.randomNormal(100, 0))
@@ -8,6 +8,7 @@ function Upgrade:construct(x, y, ...)
     self.attachTimer = 0
     self.isAttached = false
     self.radius = 7
+    self.upgradeType = type
 end
 
 function Upgrade:update(delta)
@@ -107,9 +108,19 @@ end
 
 function Upgrade:drawLate()
     if self.isAttached then
-        local offsetX = math.sin(self.rotation * math.pi / 180) * 5
-        local offsetY = -math.cos(self.rotation * math.pi / 180) * 5
-        textures:DrawSprite("upgrade_turret", self.x + offsetX, self.y + offsetY, self.rotation)
+        if self.upgradeType == 'turret' then
+            local offsetX = math.sin(self.rotation * math.pi / 180) * 5
+            local offsetY = -math.cos(self.rotation * math.pi / 180) * 5
+            textures:DrawSprite("upgrade_turret", self.x + offsetX, self.y + offsetY, self.rotation)
+        elseif self.upgradeType == 'booster' then
+            local offsetX = -math.sin(self.rotation * math.pi / 180) * 20
+            local offsetY =
+            math.cos(self.rotation * math.pi / 180) * 20
+            offsetX = offsetX + math.sin(angle(self.rotation + 90) * math.pi / 180) * 25
+            offsetY = offsetY - math.cos(angle(self.rotation + 90) * math.pi / 180) * 25
+            love.graphics.draw(images.exhaust, self.x + offsetX, self.y + offsetY, angle(self.rotation + 180) * math.pi / 180, 0.5, 0.5)
+            -- textures:DrawSprite("upgrade_turret", self.x + offsetX, self.y + offsetY, self.rotation)
+        end
     end
 end
 
