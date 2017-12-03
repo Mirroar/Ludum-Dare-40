@@ -6,7 +6,7 @@ Game.stages = {
             parts = 10,
         },
         waves = {
-            -- 'sideways',
+            'sideways',
             'seeker',
         },
         waveTimer = 5,

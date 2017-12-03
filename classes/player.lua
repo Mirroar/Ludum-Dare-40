@@ -73,8 +73,13 @@ function Player:update(delta)
 
     -- Turn towards the rotation.
     local rotationSpeed = 10
-    for i = 1, #self.attachments.entities do
+    local numBoosters = 0
+    for _, attachment in ipairs(self.attachments.entities) do
         rotationSpeed = rotationSpeed * 0.97
+        if attachment.upgradeType == 'booster' then
+            rotationSpeed = rotationSpeed * 1.05
+            numBoosters = numBoosters + 1
+        end
     end
     self.rotation = lerpAngle(self.rotation, self:GetAngleTo(mouseX, mouseY), rotationSpeed * delta)
 
@@ -95,7 +100,7 @@ function Player:update(delta)
 
     if mx ~= 0 or my ~= 0 then
         local mAngle = math.atan2(-mx, my)
-        local speedFactor = 50 / (50 + #self.attachments.entities)
+        local speedFactor = (50 + 2 * numBoosters) / (50 + #self.attachments.entities)
 
         self.x = self.x - self.speed * speedFactor * delta * math.sin(mAngle)
         self.y = self.y + self.speed * speedFactor * delta * math.cos(mAngle)
@@ -110,7 +115,7 @@ function Player:update(delta)
 
         for _, attachment in ipairs(self.attachments.entities) do
             attachment.cooldown = math.sqrt(#self.attachments.entities) + love.math.randomNormal(#self.attachments.entities) / 10
-            if attachment:TryFire() then
+            if attachment.upgradeType == 'turret' and attachment:TryFire() then
                 -- local bullet = Bullet(attachment.x, attachment.y, Bullet.PLAYER_SHOT, angle(self:GetAngleTo(mouseX, mouseY) + love.math.randomNormal(#self.attachments.entities)))
                 local bullet = Bullet(attachment.x, attachment.y, Bullet.PLAYER_SHOT_SLOW, attachment.rotation)
                 game.entities:AddEntity(bullet)
