@@ -64,7 +64,7 @@ function TextureAtlas:GetQuad(identifier)
     return self.spriteIndex[identifier].quad
 end
 
-function TextureAtlas:DrawSprite(identifier, x, y, rotation)
+function TextureAtlas:DrawSprite(identifier, x, y, rotation, scale)
     assert(self.spriteIndex[identifier])
 
     if not rotation then rotation = 0 end
@@ -74,5 +74,5 @@ function TextureAtlas:DrawSprite(identifier, x, y, rotation)
     self.AssertArgumentType(x, "number")
     self.AssertArgumentType(y, "number")
 
-    love.graphics.draw(self:GetBaseFile(), spriteObject.quad, x, y, rotation / 180 * math.pi, 1, 1, spriteObject.width / 2, spriteObject.height / 2)
+    love.graphics.draw(self:GetBaseFile(), spriteObject.quad, x, y, rotation / 180 * math.pi, scale or 1, scale or 1, spriteObject.width / 2, spriteObject.height / 2)
 end

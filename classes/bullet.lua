@@ -96,3 +96,10 @@ function Bullet:draw()
         textures:DrawSprite("enemy_bullet", self.x, self.y, self.rotation)
     end
 end
+
+function Bullet:drawLate()
+    -- self:debugMath()
+    if self.bulletType == Bullet.ENEMY_SHOT then
+        love.graphics.draw(images.redLight, self.x - 50, self.y - 50, 0, 0.5, 0.5)
+    end
+end

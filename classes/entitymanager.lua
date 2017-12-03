@@ -35,6 +35,16 @@ end
 
 function EntityManager:draw()
     for _, entity in ipairs(self.entities) do
+        if entity.drawEarly then
+            entity:drawEarly()
+        end
+    end
+    for _, entity in ipairs(self.entities) do
         entity:draw()
+    end
+    for _, entity in ipairs(self.entities) do
+        if entity.drawLate then
+            entity:drawLate()
+        end
     end
 end

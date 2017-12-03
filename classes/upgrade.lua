@@ -29,6 +29,10 @@ function Upgrade:moveWithPlayer()
     self.x = game.player.x + dx
     self.y = game.player.y + dy
     self.rotation = angle(game.player.rotation + self.attachAngle)
+
+    if self.parentAttachment then
+        self.rotation = self.parentAttachment:GetAngleTo(self.x, self.y)
+    end
 end
 
 function Upgrade:moveToAttach(delta)
@@ -85,8 +89,20 @@ function Upgrade:moveToAttach(delta)
     self.attachTimer = self.attachTimer + delta
 end
 
+function Upgrade:drawEarly()
+    if self.isAttached then
+        local offsetX = math.sin(self.rotation * math.pi / 180) * 10
+        local offsetY = -math.cos(self.rotation * math.pi / 180) * 10
+        textures:DrawSprite("upgrade_attach", self.x - offsetX, self.y - offsetY, self.rotation)
+    end
+end
+
 function Upgrade:draw()
-    textures:DrawSprite("upgrade", self.x, self.y, self.rotation)
+    if self.isAttached then
+        textures:DrawSprite("upgrade", self.x, self.y, self.rotation)
+    else
+        textures:DrawSprite("upgrade_inflight", self.x, self.y, self.attachTimer * 30)
+    end
 end
 
 function Upgrade:Destroy()

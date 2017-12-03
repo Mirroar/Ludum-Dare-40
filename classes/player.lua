@@ -11,6 +11,9 @@ function Player:construct(...)
     self.hitpoints = self.maxHitpoints
 
     self.attachments = EntityManager()
+
+    self.radius = 20
+    self.statusLightTimer = 0
 end
 
 function Player:attach(attachment)
@@ -29,11 +32,31 @@ function Player:draw()
     love.graphics.line(self.x, self.y, self.x + 300 * dx, self.y + 300 * dy)
 
     love.graphics.setColor(255, 255, 255)
-    textures:DrawSprite("player", self.x, self.y, self.rotation)
+    textures:DrawSprite("player", self.x, self.y, self.rotation, 2)
+end
+
+function Player:drawLate()
+    -- Draw status light.
+    local lightAngle = angle(self.rotation - 50)
+    local lightX = self.x + 13 * math.sin(lightAngle * math.pi / 180) - 100
+    local lightY = self.y - 13 * math.cos(lightAngle * math.pi / 180) - 100
+
+    if self.statusLightTimer < 2 then
+        if self.statusLightTimer > 0 then
+            local alpha = 1 - self.statusLightTimer / 2
+            love.graphics.setColor(255, 255, 255, 255 * alpha)
+        end
+
+        love.graphics.draw(images.greenLight, lightX, lightY, 0, 1, 1)
+        love.graphics.setColor(255, 255, 255)
+    elseif self.statusLightTimer > 2.9 then
+        love.graphics.draw(images.redLight, lightX, lightY, 0, 1, 1)
+    end
 end
 
 function Player:update(delta)
     Actor.update(self, delta)
+    self.statusLightTimer = self.statusLightTimer - delta
 
     -- @todo Maybe even support game pad!
 
@@ -97,6 +120,13 @@ function Player:update(delta)
 
     -- Allow attachment entities to get removed and stuff.
     self.attachments:update()
+end
+
+function Player:Hit(...)
+    Actor.Hit(self, ...)
+
+    -- Flash status light.
+    self.statusLightTimer = 3
 end
 
 function Player:Destroy()

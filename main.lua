@@ -58,11 +58,19 @@ local function LoadTextures()
     -- textures:SetTileSize(32, 32)
     -- textures:SetTilePadding(2, 2)
     -- textures:SetTileOffset(2, 2)
-    textures:DefineTile("player", 1, 1)
+    textures:DefineSprite("player", 0, 32, 32, 32)
+    -- textures:DefineTile("player", 1, 1)
     textures:DefineTile("bullet", 2, 1)
     textures:DefineTile("enemy", 3, 1)
     textures:DefineTile("enemy_bullet", 4, 1)
     textures:DefineTile("upgrade", 1, 2)
+    textures:DefineTile("upgrade_attach", 2, 2)
+    textures:DefineTile("upgrade_inflight", 3, 2)
+
+    images = {
+        greenLight = love.graphics.newImage('images/GreenLight.png'),
+        redLight = love.graphics.newImage('images/RedLight.png'),
+    }
 end
 
 -- Loads and defines all needed sounds.
